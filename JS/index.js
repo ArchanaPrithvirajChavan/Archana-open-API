@@ -1,8 +1,9 @@
 // Fetching Dog Breeds and Images
 const dogSelect = document.getElementById('dog-breed');
 const dogImage = document.getElementById('dog-image');
+const breedInfo=document.getElementById("breed-info");
 const apiKey = 'x-api-key'; 
-
+let allBreeds = [];
 // Function to Fetch Breeds from API
 async function fetchDogBreeds() {
     try {
@@ -10,9 +11,11 @@ async function fetchDogBreeds() {
             headers: {
                 'x-api-key': apiKey
             }
+            
         });
         //get data in json//
         const breeds = await response.json();
+        allBreeds =breeds;
       console.log(breeds);
         // for loop breed names
         breeds.forEach(breed => {
@@ -41,7 +44,7 @@ async function displayBreedImage(breedId) {
         const response = await fetch(`https://api.thedogapi.com/v1/images/search?breed_ids=${breedId}`, {
             headers: {
                 'x-api-key': apiKey
-            }
+            } 
         });
         //response converted to json data //
         const data = await response.json();
@@ -53,7 +56,20 @@ async function displayBreedImage(breedId) {
         } else {
             dogImage.src = ''; 
         }
-    } catch (error) {
+        const selectedBreed = allBreeds.find(b => b.id == breedId);
+         if(selectedBreed) {
+            breedInfo.innerHTML=`<h3>${selectedBreed.name}</h3>
+                                                  <p><strong>Weight:</strong> ${selectedBreed.weight.imperial} lbs (${selectedBreed.weight.metric} kg)</p>
+                <p><strong>Height:</strong> ${selectedBreed.height.imperial} in (${selectedBreed.height.metric} cm)</p>
+                <p><strong>Life Span:</strong> ${selectedBreed.life_span}</p>
+                <p><strong>Temperament:</strong> ${selectedBreed.temperament || 'Not available'}</p>
+                <p><strong>Origin:</strong> ${selectedBreed.origin || 'Not available'}</p>`
+            
+          } else {
+            breedInfo.innerHTML = '<p>Breed information not found.</p>';
+        }
+
+          } catch (error) {
         console.error('Error fetching dog image:', error);
     }
 }

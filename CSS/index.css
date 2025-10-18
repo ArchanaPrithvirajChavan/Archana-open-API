@@ -57,6 +57,45 @@ main {
     margin-top: 20px;
     border-radius: 10px;
 }
+#breed-info {
+    background-color: #ffffff;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    text-align: left;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* Breed Info Headings */
+#breed-info h3 {
+    text-align: center;
+    color: #0c4f23;
+    margin-bottom: 10px;
+}
+
+/* Breed Info Paragraphs */
+#breed-info p {
+    margin: 5px 0;
+}
+
+/* Optional: Wrap image + info side by side */
+.breed-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.breed-container img {
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
 
 /* Responsive Design */
 @media (max-width: 600px) {
