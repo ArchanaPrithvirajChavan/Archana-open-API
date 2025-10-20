@@ -1,32 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dog Shop - Breed Selector</title>
-    <link rel="stylesheet" href="\CSS\index.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dog Breed Explorer 🐾</title>
+  <link rel="stylesheet" href="../CSS/style.css">
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <h1><i>Welcome to the Dog world</i></h1>
-            <p>Find your perfect dog breed</p>
-        </div>
-    </header>
-    <main>
-        <div class="breed-selection">
-            <label for="dog-breed">Select a Dog Breed:</label>
-            <select id="dog-breed">
-                <option value="">Choose a breed</option>
-            </select>
-        </div>
-        <div class="breed-image">
-            <img id="dog-image" src="" alt="Dog Breed Image" />
-        </div>
-        <div id="breed-info"></div>
+  <div class="hero-banner"></div>
 
-    </main>
+  <h1>🐶 Dog Breed Explorer</h1>
 
-    <script src="\JS\index.js"></script>
+  <div class="controls">
+    <label for="dog-breed">Select a Breed:</label>
+    <select id="dog-breed">
+      <option value="">--Choose a breed--</option>
+    </select>
+    <button id="showFavourites">Show Favourites ❤️</button>
+  </div>
+
+  <div id="breed-info"></div>
+
+  <!-- Template for dog cards -->
+  <div id="card-template" style="display: none;">
+    <div class="card">
+      <img src="" alt="Dog Image">
+      <div>
+        <button class="favourite">❤️ Favourite</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="gallery" class="gallery"></div>
+
+  <script src="../JS/script.js"></script>
 </body>
 </html>
