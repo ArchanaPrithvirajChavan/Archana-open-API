@@ -3,155 +3,141 @@ const gallery = document.getElementById('gallery');
 const breedInfo = document.getElementById('breed-info');
 const showFavBtn = document.getElementById('showFavourites');
 
-const apiKey = 'live_Ysf4euTUTcyPb5RgLcJGcZG5wcspqHS29RCcHqfBQlZGmb2hcrOdguxt2fxHEOMx'; 
+const apiKey = 'live_Ysf4euTUTcyPb5RgLcJGcZG5wcspqHS29RCcHqfBQlZGmb2hcrOdguxt2fxHEOMx';
 let allBreeds = [];
+let currentMode = 'breeds'; // 'breeds' or 'favourites'
 
-//  Fetch all dog breeds
+// --- Fetch all dog breeds ---
 async function fetchDogBreeds() {
   try {
-    const response = await fetch('https://api.thedogapi.com/v1/breeds', {
-      headers: { 'x-api-key': apiKey }
-    });
-    const breeds = await response.json();
-    allBreeds = breeds;
+    const res = await fetch('https://api.thedogapi.com/v1/breeds', { headers: { 'x-api-key': apiKey } });
+    allBreeds = await res.json();
 
-    breeds.forEach(breed => {
+    allBreeds.forEach(breed => {
       const option = document.createElement('option');
       option.value = breed.id;
       option.textContent = breed.name;
       dogSelect.appendChild(option);
     });
-  } catch (error) {
-    console.error('Error fetching dog breeds:', error);
+  } catch (err) {
+    console.error('Error fetching dog breeds:', err);
   }
 }
 
-//  Display breed images and info
-async function displayBreedImages(breedId) {
-  if (!breedId) {
-    gallery.innerHTML = "";
-    breedInfo.innerHTML = "";
-    return;
-  }
+// --- Display breed images and info ---
+async function displayBreed(breedId) {
+  currentMode = 'breeds';
+  gallery.innerHTML = '';
+  breedInfo.innerHTML = '';
 
+  if (!breedId) return;
+
+  const selectedBreed = allBreeds.find(b => b.id == breedId);
+  if (!selectedBreed) return;
+
+  breedInfo.innerHTML = `
+    <h2>${selectedBreed.name}</h2>
+    <p><strong>Weight:</strong> ${selectedBreed.weight.imperial} lbs (${selectedBreed.weight.metric} kg)</p>
+    <p><strong>Height:</strong> ${selectedBreed.height.imperial} in (${selectedBreed.height.metric} cm)</p>
+    <p><strong>Life Span:</strong> ${selectedBreed.life_span}</p>
+    <p><strong>Temperament:</strong> ${selectedBreed.temperament || 'Not available'}</p>
+    <p><strong>Origin:</strong> ${selectedBreed.origin || 'Not available'}</p>
+  `;
+
+  // Fetch breed images
   try {
-    const selectedBreed = allBreeds.find(b => b.id == breedId);
-    if (!selectedBreed) return;
+    const res = await fetch(`https://api.thedogapi.com/v1/images/search?breed_ids=${breedId}&limit=6`, {
+      headers: { 'x-api-key': apiKey }
+    });
+    let images = await res.json();
 
-    // Display breed info
-    breedInfo.innerHTML = `
-      <h2>${selectedBreed.name}</h2>
-      <p><strong>Weight:</strong> ${selectedBreed.weight.imperial} lbs (${selectedBreed.weight.metric} kg)</p>
-      <p><strong>Height:</strong> ${selectedBreed.height.imperial} in (${selectedBreed.height.metric} cm)</p>
-      <p><strong>Life Span:</strong> ${selectedBreed.life_span}</p>
-      <p><strong>Temperament:</strong> ${selectedBreed.temperament || 'Not available'}</p>
-      <p><strong>Origin:</strong>${selectedBreed.origin || 'Not available'}</p>
-    `;
-
-    // Fetch multiple images
-    const res = await fetch(
-      `https://api.thedogapi.com/v1/images/search?breed_ids=${breedId}&limit=6`,
-      { headers: { 'x-api-key': apiKey } }
-    );
-    const data = await res.json();
-
-    // If no images returned, fallback to reference_image_id
-    const images = data.length > 0 ? data : [];
     if (images.length === 0 && selectedBreed.reference_image_id) {
-      const fallbackRes = await fetch(
-        `https://api.thedogapi.com/v1/images/${selectedBreed.reference_image_id}`,
-        { headers: { 'x-api-key': apiKey } }
-      );
+      const fallbackRes = await fetch(`https://api.thedogapi.com/v1/images/${selectedBreed.reference_image_id}`, {
+        headers: { 'x-api-key': apiKey }
+      });
       const fallbackData = await fallbackRes.json();
       images.push(fallbackData);
     }
 
-    // Display images
-    gallery.innerHTML = "";
-    images.forEach(item => {
+    images.forEach(img => {
       const card = document.createElement('div');
-      card.classList.add('card');
+      card.className = 'card';
       card.innerHTML = `
-        <img src="${item.url}" alt="${selectedBreed.name}" width="250">
-        <div>
-          <button onclick="addToFavourites('${item.id}')">❤️ Favourite</button>
-        </div>
+        <img src="${img.url}" alt="${selectedBreed.name}" width="250">
+        <div><button onclick="addToFavourites('${img.id}')">❤️ Favourite</button></div>
       `;
       gallery.appendChild(card);
     });
-
-  } catch (error) {
-    console.error('Error fetching breed images:', error);
+  } catch (err) {
+    console.error('Error fetching breed images:', err);
   }
 }
 
-//  Add Image to Favourites
+// --- Add Image to Favourites ---
 async function addToFavourites(imageId) {
   try {
-    const res = await fetch("https://api.thedogapi.com/v1/favourites", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey
-      },
+    const res = await fetch('https://api.thedogapi.com/v1/favourites', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
       body: JSON.stringify({ image_id: imageId })
     });
-    if (res.ok) {
-      alert("Added to favourites! 🐾");
-    } else {
-      alert("Failed to add favourite.");
-    }
+    if (res.ok) alert('Added to favourites! 🐾');
+    else alert('Failed to add favourite.');
   } catch (err) {
-    console.error("Error adding favourite:", err);
+    console.error(err);
   }
 }
 
-// Show Favourite Dogs
+// --- Show Favourites ---
 async function showFavourites() {
+  currentMode = 'favourites';
+  gallery.innerHTML = '';
+  breedInfo.innerHTML = '<h2>Your Favourite Dogs ❤️</h2>';
+
   try {
-    const res = await fetch("https://api.thedogapi.com/v1/favourites", {
-      headers: { "x-api-key": apiKey }
+    const res = await fetch('https://api.thedogapi.com/v1/favourites', {
+      headers: { 'x-api-key': apiKey }
     });
     const data = await res.json();
 
-    gallery.innerHTML = "";
-    breedInfo.innerHTML = "<h2>Your Favourite Dogs ❤️</h2>";
+    if (!data.length) {
+      gallery.innerHTML = '<p>No favourites yet.</p>';
+      return;
+    }
 
     data.forEach(fav => {
-      const card = document.createElement("div");
-      card.className = "card";
+      const card = document.createElement('div');
+      card.className = 'card';
       card.innerHTML = `
         <img src="${fav.image.url}" alt="Favourite Dog" width="250">
-        <div>
-          <button onclick="removeFavourite(${fav.id})"> Remove</button>
-        </div>
+        <div><button onclick="removeFavourite(${fav.id})">Remove</button></div>
       `;
       gallery.appendChild(card);
     });
   } catch (err) {
-    console.error("Error loading favourites:", err);
+    console.error(err);
   }
 }
 
-// Remove Favourite
+// --- Remove Favourite ---
 async function removeFavourite(favId) {
   try {
     const res = await fetch(`https://api.thedogapi.com/v1/favourites/${favId}`, {
-      method: "DELETE",
-      headers: { "x-api-key": apiKey }
+      method: 'DELETE',
+      headers: { 'x-api-key': apiKey }
     });
     if (res.ok) {
-      alert("Removed from favourites 🐾");
+      alert('Removed from favourites 🐾');
       showFavourites();
     }
   } catch (err) {
-    console.error("Error removing favourite:", err);
+    console.error(err);
   }
 }
 
-// Event listeners
-dogSelect.addEventListener('change', e => displayBreedImages(e.target.value));
+// --- Event Listeners ---
+dogSelect.addEventListener('change', e => displayBreed(e.target.value));
 showFavBtn.addEventListener('click', showFavourites);
 
-//Initialize
+// --- Initialize ---
 fetchDogBreeds();
