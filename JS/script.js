@@ -6,7 +6,7 @@ const showDetailsBtn = document.getElementById('showDetails');
 
 const apiKey = 'live_Ysf4euTUTcyPb5RgLcJGcZG5wcspqHS29RCcHqfBQlZGmb2hcrOdguxt2fxHEOMx';
 let allBreeds = [];
-let currentMode = 'breeds'; // 'breeds', 'favourites', 'details'
+let currentMode = 'breeds'; 
 
 // --- Fetch all dog breeds ---
 async function fetchDogBreeds() {
@@ -73,7 +73,7 @@ async function displayBreed(breedId) {
   }
 }
 
-// --- Show additional breed details (distinct data point) ---
+// breed details (data point) 
 async function showBreedDetails() {
   currentMode = 'details';
   const breedId = dogSelect.value;
@@ -82,7 +82,7 @@ async function showBreedDetails() {
   const selectedBreed = allBreeds.find(b => b.id == breedId);
   if (!selectedBreed) return;
 
-  // Display distinct data
+  
   breedInfo.innerHTML = `
     <h2>Breed Details: ${selectedBreed.name}</h2>
     <p><strong>Origin:</strong> ${selectedBreed.origin || 'Unknown'}</p>
@@ -91,7 +91,7 @@ async function showBreedDetails() {
     <p><strong>Purpose / Temperament:</strong> ${selectedBreed.temperament || 'Not available'}</p>
   `;
 
-  gallery.innerHTML = ''; // optionally clear gallery
+  gallery.innerHTML = '';
 }
 
 // --- Add Image to Favourites ---
