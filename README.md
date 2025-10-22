@@ -22,6 +22,14 @@ This project fetches data from a public API to display dog images based on user-
 
 ##  Features
 
-- Select a dog breed from a dropdown
-- View a random image of the selected breed
+.Select a dog breed from a dropdown menu.
 
+.View a random image of the selected breed.
+
+.Mark a dog as your favorite.
+
+.Click the “Select Favorite” button to view your chosen favorite dog.
+
+.Remove a dog from your favorites list if desired.
+
+.The final selected favorite dog will remain.

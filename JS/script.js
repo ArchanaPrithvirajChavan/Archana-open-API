@@ -89,7 +89,7 @@ async function showBreedDetails() {
     <p><strong>Life Span:</strong> ${selectedBreed.life_span}</p>
     <p><strong>Breed Group:</strong> ${selectedBreed.breed_group || 'Unknown'}</p>
     <p><strong>Purpose / Temperament:</strong> ${selectedBreed.temperament || 'Not available'}</p>
-  `;
+  `
 
   gallery.innerHTML = '';
 }
