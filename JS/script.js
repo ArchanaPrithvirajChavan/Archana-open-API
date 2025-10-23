@@ -3,6 +3,7 @@ const gallery = document.getElementById('gallery');
 const breedInfo = document.getElementById('breed-info');
 const showFavBtn = document.getElementById('showFavourites');
 const showDetailsBtn = document.getElementById('showDetails');
+const errorMessage = document.getElementById('error-message');
 
 const apiKey = 'live_Ysf4euTUTcyPb5RgLcJGcZG5wcspqHS29RCcHqfBQlZGmb2hcrOdguxt2fxHEOMx';
 let allBreeds = [];
@@ -22,11 +23,14 @@ async function fetchDogBreeds() {
     });
   } catch (err) {
     console.error('Error fetching dog breeds:', err);
+    errorMessage.style.display = 'block';
+    errorMessage.textContent = 'Failed to fetch dog breeds. Please try again later.';
   }
 }
 
 // --- Display breed images and basic info ---
 async function displayBreed(breedId) {
+  breedInfo.style.display="block";
   currentMode = 'breeds';
   gallery.innerHTML = '';
   breedInfo.innerHTML = '';
@@ -70,6 +74,8 @@ async function displayBreed(breedId) {
     });
   } catch (err) {
     console.error('Error fetching breed images:', err);
+    errorMessage.style.display = 'block';
+    errorMessage.textContent = 'Failed to fetch dog breeds image. Please try again later.';
   }
 }
 
@@ -106,6 +112,10 @@ async function addToFavourites(imageId) {
     else alert('Failed to add favourite.');
   } catch (err) {
     console.error(err);
+    errorMessage.textContent = '';
+    errorMessage.style.display = 'block';
+    
+    errorMessage.textContent = 'Failed to lode favourite. Please try again later.';
   }
 }
 
@@ -137,6 +147,9 @@ async function showFavourites() {
     });
   } catch (err) {
     console.error(err);
+    errorMessage.textContent = '';
+    errorMessage.style.display = 'block';
+    errorMessage.textContent = 'Failed to fetch favorite dog image. Please try again later.';
   }
 }
 
@@ -153,6 +166,9 @@ async function removeFavourite(favId) {
     }
   } catch (err) {
     console.error(err);
+    errorMessage.textContent = '';
+    errorMessage.style.display = 'block';
+    errorMessage.textContent = 'Failed to remove dog breeds. Please try again later.';
   }
 }
 

@@ -46,14 +46,16 @@ button:hover {
 }
 
 #breed-info {
+  display: none;
   margin: 20px auto;
   width: 80%;
   max-width: 600px;
   text-align: left;
-  background: #fefefe;
+  background: #ceedce;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   padding: 15px;
+
 }
 
 .gallery {
