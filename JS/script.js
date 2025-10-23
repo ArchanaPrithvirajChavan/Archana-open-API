@@ -115,7 +115,7 @@ async function addToFavourites(imageId) {
     errorMessage.textContent = '';
     errorMessage.style.display = 'block';
     
-    errorMessage.textContent = 'Failed to lode favourite. Please try again later.';
+    errorMessage.textContent = 'Failed to load favourite. Please try again later.';
   }
 }
 
