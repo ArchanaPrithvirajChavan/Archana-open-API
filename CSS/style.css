@@ -81,3 +81,8 @@ button:hover {
   margin-top: 8px;
   width: 48%;
 }
+#error-message{
+  display:none; 
+  color:red;
+   margin-bottom:10px;
+}
